@@ -116,8 +116,78 @@ var once = function (fn) {
   };
 };
 
-let fn = (a, b, c) => a + b + c;
-let onceFn = once(fn);
+// let fn = (a, b, c) => a + b + c;
+// let onceFn = once(fn);
 
-console.log(onceFn(1, 2, 3));
-console.log(onceFn(2, 3, 6));
+// console.log(onceFn(1, 2, 3));
+// console.log(onceFn(2, 3, 6));
+let callCount = 0;
+
+function memoize(fn) {
+  let cache = {};
+
+  return function (...args) {
+    if (cache.hasOwnProperty(fn(...args))) {
+      console.log(cache, "cac");
+      return cache[fn(...args)];
+    } else {
+      cache[fn(...args)] = fn(...args);
+      return fn(...args);
+    }
+  };
+}
+
+const memoizedFn = memoize(function (a, b) {
+  callCount += 1;
+  return a + b;
+});
+// memoizedFn(2, 3); // 5
+// memoizedFn(2, 3); // 5
+// console.log(memoizedFn(2, 3));
+// console.log(memoizedFn(2, 6));
+// console.log(memoizedFn(2, 5));
+
+let remove = function removeDuplicates(nums) {
+  let uniqueKey = {};
+  let result = [];
+  let i = 0;
+  for (i = 0; i < nums.length; i++) {
+    if (typeof nums[i] === "number") {
+      if (!uniqueKey.hasOwnProperty(nums[i])) {
+        uniqueKey[nums[i]] = nums[i];
+        result.push(nums[i]);
+      }
+    }
+  }
+  return result.length;
+};
+let removeDup = function removeDuplicates(nums) {
+  if (nums.length === 0) return 0;
+
+  let k = 1;
+
+  for (let i = 1; i < nums.length; i++) {
+    if (nums[i] !== nums[i - 1]) {
+      nums[k] = nums[i];
+      k++;
+    }
+  }
+
+  return k;
+};
+
+// console.log(removeDup([2, 10, 10, 30, 30, 30]));
+
+let removeEl = function (nums, val) {
+  let k = 0;
+
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] !== val) {
+      nums[k] = nums[i];
+      k++;
+    }
+  }
+
+  return k;
+};
+console.log(removeEl([1, 1, 2, 3, 4], 2));
